@@ -30,6 +30,12 @@ import {
 
 import SafariWebAuth from "react-native-safari-web-auth";
 
+import OpenloginReactNativeSdk, {
+  AuthState,
+  LoginProvider,
+  OpenloginNetwork,
+} from 'openlogin-react-native-sdk'; 
+
 const Section = ({children, title}): Node => {
   const isDarkMode = useColorScheme() === 'dark';
   return (
@@ -63,6 +69,18 @@ const App: () => Node = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  React.useEffect(() => {
+
+    OpenloginReactNativeSdk.init({
+      clientId:
+        'BFDssx7rrb7p90lZ9l28PxB9fcIIai81pmOaMt1rMwzyQ-uWuG2srWRK_07Y55cNWbv2qVXVXNM-OXCW95c3TuQ',
+      network: OpenloginNetwork.TESTNET,
+      redirectUrl: 'com.example.openloginreactnativesdk://auth',
+    })
+      .then((result) => console.log(`success: ${result}`))
+      .catch((err) => console.log(`error: ${err}`));
+  }, []);
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
@@ -76,9 +94,19 @@ const App: () => Node = () => {
           }}>
           <Button title="Run Login" onPress={()=>{
             if (Platform.OS === "ios" && parseInt(Platform.Version, 10) >= 12) {
-              SafariWebAuth.requestAuth(`https://google.com`);
+              SafariWebAuth.requestAuth(`https://sdk.openlogin.com/login`);
             }
           }}/>
+	  <Button
+        title="OpenLogin"
+        onPress={() =>
+          OpenloginReactNativeSdk.login({
+            provider: LoginProvider.GOOGLE,
+          })
+            .then((result) => console.log(`success: ${result}`))
+            .catch((err) => console.log(`error: ${err}`))
+        }
+      />
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.js</Text> to change this
             screen and then come back to see your edits.
