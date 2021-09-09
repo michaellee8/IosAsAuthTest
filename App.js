@@ -16,6 +16,8 @@ import {
   Text,
   useColorScheme,
   View,
+  Button,
+  Platform,
 } from 'react-native';
 
 import {
@@ -25,6 +27,8 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+
+import SafariWebAuth from "react-native-safari-web-auth";
 
 const Section = ({children, title}): Node => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -70,6 +74,11 @@ const App: () => Node = () => {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
+          <Button title="Run Login" onPress={()=>{
+            if (Platform.OS === "ios" && parseInt(Platform.Version, 10) >= 12) {
+              SafariWebAuth.requestAuth(`https://google.com`);
+            }
+          }}/>
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.js</Text> to change this
             screen and then come back to see your edits.
